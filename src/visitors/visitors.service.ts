@@ -3,7 +3,7 @@ import { CreateVisitorDto } from './dto/create-visitor.dto';
 import { UpdateVisitorDto } from './dto/update-visitor.dto';
 import { Visitor } from './entities/visitor.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { timestamp } from 'rxjs';
 
 @Injectable()
@@ -31,33 +31,37 @@ export class VisitorsService {
     return await this.visitorRepository.save(visitor)
   }
 
-  async findAll() {
+  async findAll() : Promise<Visitor[]>{
     return await this.visitorRepository.find({
-      select: ['firstName', 'lastName', 'phone', 'idCard', 'token', 'destFloor', 'checkIn', 'checkOut']
+      select: ['id','firstName', 'lastName', 'phone', 'idCard', 'token', 'destFloor', 'checkIn', 'checkOut']
     })
   }
 
-  async findOne(id: number) {
+  async findOne(id: number): Promise<Visitor[]> {
     return await this.visitorRepository.find({
-      select: ['firstName', 'lastName', 'phone', 'idCard', 'token', 'destFloor', 'checkIn', 'checkOut'],
+      select: ['id','firstName', 'lastName', 'phone', 'idCard', 'token', 'destFloor', 'checkIn', 'checkOut'],
       where: [{ id: id }]
     })
   }
 
   async findByToken(token: string): Promise<any> {
     const result = await this.visitorRepository.find({
-      select: ['firstName', 'lastName', 'phone', 'idCard', 'token', 'destFloor', 'checkIn', 'checkOut'],
+      select: ['id','firstName', 'lastName', 'phone', 'idCard', 'token', 'destFloor', 'checkIn', 'checkOut'],
       where: [{ token: token }]
     });
 
     return result;
   }
 
-  update(id: number, updateVisitorDto: UpdateVisitorDto) {
-    return `This action updates a #${id} visitor`;
+  async update(id: number, updateVisitorDto: UpdateVisitorDto) :Promise<UpdateResult>{
+    return await this.visitorRepository.update(id,updateVisitorDto) 
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} visitor`;
+  async remove(id: number) :Promise<DeleteResult> {
+    return await this.visitorRepository.delete(id);
+  }
+
+  async count() :Promise<number> {
+    return await this.visitorRepository.count();
   }
 }

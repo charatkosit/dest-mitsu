@@ -29,7 +29,7 @@ export class AcmService {
 
   async findOfficerByToken(token: string): Promise<any> {
     const result = await this.officerRepository.find({
-      select: ['firstName', 'lastName', 'token', 'destFloor'],
+      select: ['firstName', 'lastName', 'token', 'multiSelectFloor'],
       where: [{ token: token }]
     });
 

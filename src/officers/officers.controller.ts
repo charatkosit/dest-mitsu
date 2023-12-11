@@ -12,15 +12,41 @@ export class OfficersController {
     return this.officersService.create(createOfficerDto);
   }
 
+  @Get('count')
+  count(){
+    return this.officersService.count();
+  } 
+
   @Get()
   findAll() {
+      // const counter:number = Object.keys(data).length
+    // let code:number;
+    // let message:string;
+    // console.log (counter);
+    // if (counter == 0) {
+    //     code =HttpStatus.NOT_FOUND;
+    //     message='Not Found';  
+    // }else {
+    //     code =HttpStatus.OK;
+    //     message='OK';
+    // }
+        // return {
+    //   code: code,
+    //   message: message,
+    //   resultFound: counter,
+    //   data: data
+    // } 
+
     return this.officersService.findAll();
+  
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.officersService.findOne(+id);
   }
+
+
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateOfficerDto: UpdateOfficerDto) {

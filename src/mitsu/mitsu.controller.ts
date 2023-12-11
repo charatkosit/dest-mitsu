@@ -58,58 +58,62 @@ export class MitsuController {
  @Post('single')
   singleToMitsu(@Body() singleMitsuDto: SingleMitsuDto){
     //Destination-Floor
-    const hexDestinationFloor = this.udpService.decToHex(singleMitsuDto.destFloor)
-
+    const hexDestinationFloor = this.udpService.decToHex(+singleMitsuDto.destFloor)
+    console.log(`DestFL: ${singleMitsuDto.destFloor}`)
+    console.log(`+DestFL: ${+singleMitsuDto.destFloor}`)
+    console.log(`hexDestFL: ${hexDestinationFloor}`)
     //Boarding-Floor
     //  const hexBoardingFloor = this.lookupTable[boardFloor];
 
     //Device-Number
-    const hexDeviceNumber = this.udpService.decToHex(singleMitsuDto.deviceNum);
+    const hexDeviceNumber = this.udpService.decToHex(+singleMitsuDto.deviceNum);
 
     //
-    const boardingFloorByDeviceNum = this.udpService.deviceNumToHexBoardingFloor(singleMitsuDto.deviceNum)
+    const boardingFloorByDeviceNum = this.udpService.deviceNumToHexBoardingFloor(+singleMitsuDto.deviceNum)
     const hexBoardingFloorByDeviceNum = this.lookupTable[boardingFloorByDeviceNum]
+   
 
-    //Address-Device (Bank01, Bank02)
-    const hexBankByDeviceNum = this.udpService.checkAddressDevice(singleMitsuDto.deviceNum)
+    //Address-Device (Bank01, Bank02, multiBank)
+    const hexBankByDeviceNum = this.udpService.checkAddressDevice(+singleMitsuDto.deviceNum)
+    console.log(`hexBackByDeviceNum ${hexBankByDeviceNum}`)
 
     let Msg: string = '';
-    let codeMsg1: string = '1730';      // *identifier
-    let codeMsg2: string = '0014';      //  data length
-    let codeMsg3: string = '01';    //  Address Device Type (ELSWG01)
-    let codeMsg4: string = hexBankByDeviceNum;    //  Address Device Number(Bank01,Bank02) xx 
-    let codeMsg5: string = '11';    //  Sender Device Type
-    let codeMsg6: string = '01';    //  Sender Device Number
+    let sCodeMsg1: string = '1730';      // *identifier
+    let sCodeMsg2: string = '0014';      //  data length
+    let sCodeMsg3: string = '01';    //  Address Device Type (ELSWG01)
+    let sCodeMsg4: string = hexBankByDeviceNum;    //  Address Device Number(Bank01,Bank02) xx 
+    let sCodeMsg5: string = '11';    //  Sender Device Type
+    let sCodeMsg6: string = '01';    //  Sender Device Number
     let reserve1: string = '00000000';   // *reserve
-    let codeMsg7: string = '01';         // single floor  (Conmmand number)
-    let codeMsg8: string = '12';         // data length
-    let codeMsg9: string = hexDeviceNumber;       // Device number xx xx 
-    let codeMsg10: string = '01';                  // Verification type
-    let codeMsg11: string = '01';                  // Verification Number
-    let codeMsg12: string = '00';                   // Hall call button riser attribute
-    let codeMsg13: string = '00';          // Reserve
-    let codeMsg14: string = hexBoardingFloorByDeviceNum;       // Boarding floor xx xx
-    let codeMsg15: string = hexDestinationFloor;      // Destination floor       xx xx
-    let codeMsg16: string = '01';        // Boarding Front/Rear
-    let codeMsg17: string = '01';        // Destination Front/Rear
-    let codeMsg18: string = '00';        // Elevator's call attribute
-    let codeMsg19: string = '00';        // Nonstop
-    let codeMsg20: string = '00';        // Call Registration Mode
-    let codeMsg21: string = 'FF'         // Sequence Number
+    let sCodeMsg7: string = '01';         // single floor  (Conmmand number)
+    let sCodeMsg8: string = '12';         // data length
+    let sCodeMsg9: string = hexDeviceNumber;       // Device number xx xx 
+    let sCodeMsg10: string = '01';                  // Verification type
+    let sCodeMsg11: string = '01';                  // Verification Number
+    let sCodeMsg12: string = '00';                   // Hall call button riser attribute
+    let sCodeMsg13: string = '00';          // Reserve
+    let sCodeMsg14: string = hexBoardingFloorByDeviceNum;       // Boarding floor xx xx
+    let sCodeMsg15: string = hexDestinationFloor;      // Destination floor       xx xx
+    let sCodeMsg16: string = '01';        // Boarding Front/Rear
+    let sCodeMsg17: string = '01';        // Destination Front/Rear
+    let sCodeMsg18: string = '00';        // Elevator's call attribute
+    let sCodeMsg19: string = '00';        // Nonstop
+    let sCodeMsg20: string = '00';        // Call Registration Mode
+    let sCodeMsg21: string = 'FF'         // Sequence Number
     let reserve2: string = '0000';   // *Reserve
 
-    let msg = codeMsg1 + codeMsg2 + codeMsg3 + codeMsg4 + codeMsg5 + codeMsg6 + reserve1 +
-      codeMsg7 + codeMsg8 + codeMsg9 + codeMsg10 + codeMsg11 + codeMsg12 +
-      codeMsg13 + codeMsg14 + codeMsg15 + codeMsg16 + codeMsg17 + codeMsg18 +
-      codeMsg19 + codeMsg20 + codeMsg21 +
+    let sMsg = sCodeMsg1 + sCodeMsg2 + sCodeMsg3 + sCodeMsg4 + sCodeMsg5 + sCodeMsg6 + reserve1 +
+      sCodeMsg7 + sCodeMsg8 + sCodeMsg9 + sCodeMsg10 + sCodeMsg11 + sCodeMsg12 +
+      sCodeMsg13 + sCodeMsg14 + sCodeMsg15 + sCodeMsg16 + sCodeMsg17 + sCodeMsg18 +
+      sCodeMsg19 + sCodeMsg20 + sCodeMsg21 +
       reserve2;
 
-    const debugMsg = this.udpService.convertStringToHex(msg)
-    this.udpService.sendMessage(msg, 52000, singleMitsuDto.ipAddress);
+    const debugMsg = this.udpService.convertStringToHex(sMsg)
+    this.udpService.sendMessage(sMsg, 52000, singleMitsuDto.ipAddress);
 
 
     return `Message sent, Single Floor:
-       msg:    ${msg}
+       msg:    ${sMsg}
        device-number ${singleMitsuDto.deviceNum}   => ${hexDeviceNumber}
        device-number ${singleMitsuDto.deviceNum} อยู่ใน bank => ${hexBankByDeviceNum}
        device-number ${singleMitsuDto.deviceNum} อยู่ที่ชั้น  ${hexBoardingFloorByDeviceNum}
@@ -118,10 +122,10 @@ export class MitsuController {
        debug: ${debugMsg}
        
        -----
-       device-number    hex ${codeMsg9}
-       bank              hex ${codeMsg4}
-       boarding-floor   hex ${codeMsg14}
-       destination-floor hex ${codeMsg15}
+       device-number    hex ${sCodeMsg9}
+       bank              hex ${sCodeMsg4}
+       boarding-floor   hex ${sCodeMsg14}
+       destination-floor hex ${sCodeMsg15}
        
        `;
 
@@ -132,99 +136,109 @@ export class MitsuController {
   multiToMitsu(@Body() multiMitsuDto: MultiMitsuDto){
 
     //Device-Number
-    const hexDeviceNumber = this.udpService.decToHex(multiMitsuDto.deviceNum);
+    const hexDeviceNumber = this.udpService.decToHex(+multiMitsuDto.deviceNum);
 
     //Address-Device (Bank01, Bank02)
-    const hexBankByDeviceNum = this.udpService.checkAddressDevice(multiMitsuDto.deviceNum)
+    const hexMultiBankByDeviceNum = this.udpService.checkAddressDeviceMulti(+multiMitsuDto.deviceNum)
 
     //Boarding-Floor  by  Device-number
-    const boardingFloorByDeviceNum = this.udpService.deviceNumToHexBoardingFloor(multiMitsuDto.deviceNum)
+    const boardingFloorByDeviceNum = this.udpService.deviceNumToHexBoardingFloor(+multiMitsuDto.deviceNum)
     const hexBoardingFloorByDeviceNum = this.lookupTable[boardingFloorByDeviceNum]
     
 
     //Seleted-Floor
     const selectedFloor =  JSON.parse(multiMitsuDto.multiSelectFloor).map(Number);
     const hexSelectedFloor: any = this.udpService.selectFloor(selectedFloor);
+    console.log(`selectFL ${selectedFloor}`)
+    console.log(`hexSelectFL ${hexSelectedFloor}`)
 
-    let codeMsg1: string = '1730';      // *identify
-    let codeMsg2: string = '0020';      //  data length
-    let codeMsg3: string = '01';        // ELSWG01,ELSWG02
-    let codeMsg4: string = hexBankByDeviceNum; // bank01,bank01 xx
-    let codeMsg5: string = '11';
-    let codeMsg6: string = '01';
+    let mCodeMsg1: string = '1730';      // *identify
+    let mCodeMsg2: string = '0020';      //  data length
+    let mCodeMsg3: string = '01';        // ELSWG01,ELSWG02
+    let mCodeMsg4: string = hexMultiBankByDeviceNum; // bank01,bank01 xx
+    let mCodeMsg5: string = '11';
+    let mCodeMsg6: string = '01';
     let reserve1: string = '00000000';   // *reserve
-    let codeMsg7: string = '02';        // muliple floor
-    let codeMsg8: string = '1B';
-    let codeMsg9: string = hexDeviceNumber;   //Device Number xx xx 
-    let codeMsg10: string = '01'    // Verification type
-    let codeMsg11: string = '01'    // Verification location
-    let codeMsg12: string = '00'   // Hall call button
+    let mCodeMsg7: string = '02';        // muliple floor
+    let mCodeMsg8: string = '1B';
+    let mCodeMsg9: string = hexDeviceNumber;   //Device Number xx xx 
+    let mCodeMsg10: string = '01'    // Verification type
+    let mCodeMsg11: string = '01'    // Verification location
+    let mCodeMsg12: string = '00'   // Hall call button
     let reserve2: string = '00'   // Reserve xx 
-    let codeMsg13: string = hexBoardingFloorByDeviceNum;      // boarding floor xx xx
+    let mCodeMsg13: string = hexBoardingFloorByDeviceNum;      // boarding floor xx xx
     let reserve3: string = '0000';      // *reserve xx xx
-    let codeMsg14: string = '01';       // Front/Rear 01
+    let mCodeMsg14: string = '01';       // Front/Rear 01
     let reserve4: string = '00';   // reserve  xx
-    let codeMsg15: string = '00';  //Elevator's call attribute
-    let codeMsg16: string = '00';  //Nonstop 00 
-    let codeMsg17: string = '00'   //Call registration mode  00
-    let codeMsg18:string = 'FF';   //Sequence number
-    let codeMsg19: string = '09';  //Front destination floor data length 09      
-    let codeMsg20: string = '00';  //Rear destination floor data length  00
-    let codeMsg21:string =  hexSelectedFloor; // xx xx xx xx  xx xx xx xx
-    let codeMsg22:string = '00';       
+    let mCodeMsg15: string = '00';  //Elevator's call attribute
+    let mCodeMsg16: string = '00';  //Nonstop 00 
+    let mCodeMsg17: string = '00'   //Call registration mode  00
+    let mCodeMsg18:string = 'FF';   //Sequence number
+    let mCodeMsg19: string = '09';  //Front destination floor data length 09      
+    let mCodeMsg20: string = '00';  //Rear destination floor data length  00
+    let mCodeMsg21:string =  hexSelectedFloor; // xx xx xx xx  xx xx xx xx
+    let mCodeMsg22:string = '00';       
     let reserve5: string = '000000';   // *Padding
 
-    let msg = codeMsg1 + codeMsg2 + codeMsg3 + codeMsg4 + codeMsg5 + codeMsg6 +
+    let mMsg = mCodeMsg1 + mCodeMsg2 + mCodeMsg3 + mCodeMsg4 + mCodeMsg5 + mCodeMsg6 +
       reserve1 +
-      codeMsg7 + codeMsg8 + codeMsg9 + codeMsg10 + codeMsg11 + codeMsg12 +
+      mCodeMsg7 + mCodeMsg8 + mCodeMsg9 + mCodeMsg10 + mCodeMsg11 + mCodeMsg12 +
       reserve2 +
-      codeMsg13 +
+      mCodeMsg13 +
       reserve3 +
-      codeMsg14 +
+      mCodeMsg14 +
       reserve4 +
-      codeMsg15 + codeMsg16 + codeMsg17 + codeMsg18 + codeMsg19 + codeMsg20 + codeMsg21 + codeMsg22 +
+      mCodeMsg15 + mCodeMsg16 + mCodeMsg17 + mCodeMsg18 + mCodeMsg19 + mCodeMsg20 + mCodeMsg21 + mCodeMsg22 +
       reserve5;
 
-    const codeMsg = this.udpService.convertStringToHex(msg)
-    this.udpService.sendMessage(msg, 52000, multiMitsuDto.ipAddress);
+    const mCodeMsg = this.udpService.convertStringToHex(mMsg)
+    this.udpService.sendMessage(mMsg, 52000, multiMitsuDto.ipAddress);
 
 
     // 
     return `Message sent, Multiple Floor:
     selectedFloor raw  ${selectedFloor}
     selectedFloor codde ${hexSelectedFloor}
+
+     -----
+    device-number    hex ${mCodeMsg9}
+    bank              hex ${mCodeMsg4}
+    boarding-floor   hex ${mCodeMsg14}
+    destination-floor hex ${mCodeMsg15}
+    
+    
     ------
-    ${codeMsg1}   Identifier 1730
-    ${codeMsg2}   Data length 0020
-    ${codeMsg3}   Address device type   01
-    ${codeMsg4}   Address device number Bank01,02
-    ${codeMsg5}   Sender device type 11
-    ${codeMsg6}   Sender device number 01
+    ${mCodeMsg1}   Identifier 1730
+    ${mCodeMsg2}   Data length 0020
+    ${mCodeMsg3}   Address device type   01
+    ${mCodeMsg4}   Address device number Bank01,02
+    ${mCodeMsg5}   Sender device type 11
+    ${mCodeMsg6}   Sender device number 01
     ${reserve1}   reserve  00000000
-    ${codeMsg7}    Multiple-Floor  02
-    ${codeMsg8}   Data length 1B
-    ${codeMsg9}   Device-Number xx xx
-    ${codeMsg10}  Verification type  01 
-    ${codeMsg11}  Verification location  01 
-    ${codeMsg12}  Hall call button riser attribute 00
+    ${mCodeMsg7}    Multiple-Floor  02
+    ${mCodeMsg8}   Data length 1B
+    ${mCodeMsg9}   Device-Number xx xx
+    ${mCodeMsg10}  Verification type  01 
+    ${mCodeMsg11}  Verification location  01 
+    ${mCodeMsg12}  Hall call button riser attribute 00
     ${reserve2}    reserve2 00
-    ${codeMsg13}   Boarding-Floor  xx xx
+    ${mCodeMsg13}   Boarding-Floor  xx xx
     ${reserve3}    reserve3 0000
-    ${codeMsg14}  Boarding Front/Rear 01
+    ${mCodeMsg14}  Boarding Front/Rear 01
     ${reserve4}    reserve4 00
-    ${codeMsg15}  Elevator' call attribute 00
-    ${codeMsg16}  Nonstop 00
-    ${codeMsg17}  Call registration mode 00
-    ${codeMsg18}  Sequence number FF 
-    ${codeMsg19}  Front destination floor data length 09   
-    ${codeMsg20}  Rear destination floor data length  00
-    ${codeMsg21}  selected-Floor xx xx xx xx xx xx xx xx
-    ${codeMsg22}
+    ${mCodeMsg15}  Elevator' call attribute 00
+    ${mCodeMsg16}  Nonstop 00
+    ${mCodeMsg17}  Call registration mode 00
+    ${mCodeMsg18}  Sequence number FF 
+    ${mCodeMsg19}  Front destination floor data length 09   
+    ${mCodeMsg20}  Rear destination floor data length  00
+    ${mCodeMsg21}  selected-Floor xx xx xx xx xx xx xx xx
+    ${mCodeMsg22}
     ${reserve5}   Padding
 
     ------
-           ${msg}
-           ${codeMsg} `;
+           ${mMsg}
+           ${mCodeMsg} `;
 
   }
 

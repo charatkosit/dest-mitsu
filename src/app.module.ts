@@ -8,17 +8,19 @@ import { Visitor } from './visitors/entities/visitor.entity';
 import { AcmModule } from './acm/acm.module';
 import { OfficersModule } from './officers/officers.module';
 import { Officer } from './officers/entities/officer.entity';
+import { ConfigModule } from '@nestjs/config';
 
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),   
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
       port: 3318,
-      username: 'root',
-      password: 'Toyota88@',
-      database: 'Lobby',
+      username: process.env.DATABASE_USERNAME,
+      password: process.env.DATABASE_PASSWORD,
+      database: process.env.DATABASE_DB_NAME,
       entities: [Visitor,Officer],
       synchronize: false,
     }),

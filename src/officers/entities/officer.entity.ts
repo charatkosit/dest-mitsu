@@ -18,25 +18,17 @@ export class Officer {
   phone: string;
 
   @Column({nullable:true})
-  phoneExt: string;
+  idOfficer: string;
 
   @Column({nullable:true})
   department: string;
-
-  @Column({nullable:true})
-  idOfficer: string;
 
   @Column()
   token: string;
 
   @Column()
-  idCard: string;
+  multiSelectFloor: string;
 
-  @Column()
-  destFloor: number;
-
-  @Column({nullable:true})
-  remarks: string;
 
 
 

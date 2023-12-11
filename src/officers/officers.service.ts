@@ -1,26 +1,52 @@
 import { Injectable } from '@nestjs/common';
 import { CreateOfficerDto } from './dto/create-officer.dto';
 import { UpdateOfficerDto } from './dto/update-officer.dto';
+import { Officer } from './entities/officer.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { promises } from 'dns';
 
 @Injectable()
 export class OfficersService {
-  create(createOfficerDto: CreateOfficerDto) {
-    return 'This action adds a new officer';
+
+  constructor(
+    @InjectRepository(Officer)
+    private officerRepository: Repository<Officer>
+  ) { }
+
+  async create(creatOfficerDto: CreateOfficerDto) {
+    const officer = new Officer();
+    officer.firstName = creatOfficerDto.firstName;
+    officer.lastName = creatOfficerDto.lastName;
+    officer.phone = creatOfficerDto.phone;
+    officer.idOfficer = creatOfficerDto.idOfficer;
+    officer.token = creatOfficerDto.token;
+    officer.address= creatOfficerDto.address;
+    officer.department=creatOfficerDto.department;
+    officer.multiSelectFloor = creatOfficerDto.multiSelectFloor;
+    return await this.officerRepository.save(officer)
   }
 
-  findAll() {
-    return `This action returns all officers`;
+  async findAll() :Promise<Officer[]> {
+    return await this.officerRepository.find({
+      select: ['id','firstName', 'lastName', 'phone', 'idOfficer', 'token', 'multiSelectFloor','department']
+    })
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} officer`;
+    return `This action returns a #${id} officerxx`;
   }
 
-  update(id: number, updateOfficerDto: UpdateOfficerDto) {
-    return `This action updates a #${id} officer`;
+ async update(id: number, updateOfficerDto: UpdateOfficerDto):Promise<UpdateResult> {
+    return await this.officerRepository.update(id,updateOfficerDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} officer`;
+  async remove(id: number): Promise<DeleteResult> {
+    return  await this.officerRepository.delete(id)
   }
+
+  async count() :Promise<number> {
+    return await this.officerRepository.count();
+  }
+  
 }

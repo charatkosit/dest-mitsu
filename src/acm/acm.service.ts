@@ -36,7 +36,26 @@ export class AcmService {
     return result;
   }
 
-
+  async sendNotification(message: string) {
+    // ส่งข้อมูลไปยัง Line Notify API
+    const lineNotifyToken = 'ZcuasZl67YahoAeTyAvQ7loyL9RU2twtbqqizkfIhp6'; // แทนค่าด้วย Line Notify Token ของคุณ
+    const url = 'https://notify-api.line.me/api/notify';
+    
+    const headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': `Bearer ${lineNotifyToken}`,
+    };
+    
+    const data = new URLSearchParams();
+    data.append('message', message);
+    
+    try {
+      await this.http.post(url, data.toString(), { headers }).toPromise();
+    } catch (error) {
+      console.error('Error sending Line Notify:', error);
+      throw error;
+    }
+  }
 
 
 }

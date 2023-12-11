@@ -12,6 +12,14 @@ export class AcmController {
   @Post('input')
   async inputAcm(@Body() inputAcmDto: InputAcmDto) {
     console.log('input', inputAcmDto)
+    
+    //This function for re-check DeviceNum  in Debug mode 
+    //To check DeviceNum then Line Notifiaction
+    const debugData = JSON.stringify(inputAcmDto)
+    console.log(`debugData ${debugData}`)
+    this.acmService.sendNotification(debugData);
+
+
     const visitor = await this.acmService.findVisitorByToken(inputAcmDto.token);
     const officer = await this.acmService.findOfficerByToken(inputAcmDto.token);
 

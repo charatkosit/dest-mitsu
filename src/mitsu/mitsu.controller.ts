@@ -107,7 +107,8 @@ export class MitsuController {
       sCodeMsg13 + sCodeMsg14 + sCodeMsg15 + sCodeMsg16 + sCodeMsg17 + sCodeMsg18 +
       sCodeMsg19 + sCodeMsg20 + sCodeMsg21 +
       reserve2;
-
+    console.log(`sMsg ${sMsg}`)
+    
     const debugMsg = this.udpService.convertStringToHex(sMsg)
     this.udpService.sendMessage(sMsg, 52000, singleMitsuDto.ipAddress);
 
@@ -140,17 +141,22 @@ export class MitsuController {
 
     //Address-Device (Bank01, Bank02)
     const hexMultiBankByDeviceNum = this.udpService.checkAddressDeviceMulti(+multiMitsuDto.deviceNum)
-
-    //Boarding-Floor  by  Device-number
-    const boardingFloorByDeviceNum = this.udpService.deviceNumToHexBoardingFloor(+multiMitsuDto.deviceNum)
-    const hexBoardingFloorByDeviceNum = this.lookupTable[boardingFloorByDeviceNum]
+     console.log(`hexMultiBankByDeviceNum ${hexMultiBankByDeviceNum}`)
     
+     //Boarding-Floor  by  Device-number
+    const boardingFloorByDeviceNum = this.udpService.deviceNumToHexBoardingFloor(+multiMitsuDto.deviceNum)
+    console.log(`boardingFloorByDeviceNum ${boardingFloorByDeviceNum}`)
+
+    const hexBoardingFloorByDeviceNum = this.lookupTable[boardingFloorByDeviceNum]
+    console.log(`hexBoardingFloorByDeviceNum ${hexBoardingFloorByDeviceNum}`)
 
     //Seleted-Floor
     const selectedFloor =  JSON.parse(multiMitsuDto.multiSelectFloor).map(Number);
     const hexSelectedFloor: any = this.udpService.selectFloor(selectedFloor);
     console.log(`selectFL ${selectedFloor}`)
     console.log(`hexSelectFL ${hexSelectedFloor}`)
+
+    
 
     let mCodeMsg1: string = '1730';      // *identify
     let mCodeMsg2: string = '0020';      //  data length
@@ -190,7 +196,7 @@ export class MitsuController {
       reserve4 +
       mCodeMsg15 + mCodeMsg16 + mCodeMsg17 + mCodeMsg18 + mCodeMsg19 + mCodeMsg20 + mCodeMsg21 + mCodeMsg22 +
       reserve5;
-
+    console.log(`mMsg ${mMsg}`)
     const mCodeMsg = this.udpService.convertStringToHex(mMsg)
     this.udpService.sendMessage(mMsg, 52000, multiMitsuDto.ipAddress);
 

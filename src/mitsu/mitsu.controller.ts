@@ -107,7 +107,8 @@ export class MitsuController {
       sCodeMsg13 + sCodeMsg14 + sCodeMsg15 + sCodeMsg16 + sCodeMsg17 + sCodeMsg18 +
       sCodeMsg19 + sCodeMsg20 + sCodeMsg21 +
       reserve2;
-    console.log(`sMsg ${sMsg}`)
+    console.log(`Mitsu-IP:    ${singleMitsuDto.ipAddress}`);
+    console.log(`sMsg ${sMsg}`);
     
     const debugMsg = this.udpService.convertStringToHex(sMsg)
     this.udpService.sendMessage(sMsg, 52000, singleMitsuDto.ipAddress);
@@ -123,7 +124,7 @@ export class MitsuController {
        debug: ${debugMsg}
        
        -----
-       Mitsu-IP:    ${singleMitsuDto.ipAddress}
+       
        device-number    hex ${sCodeMsg9}
        bank              hex ${sCodeMsg4}
        boarding-floor   hex ${sCodeMsg14}
@@ -208,7 +209,7 @@ export class MitsuController {
     selectedFloor codde ${hexSelectedFloor}
 
      -----
-    Mitsu-IP: ${multiMitsuDto.ipAddress}
+   
     device-number    hex ${mCodeMsg9}
     bank              hex ${mCodeMsg4}
     boarding-floor   hex ${mCodeMsg14}
@@ -245,6 +246,7 @@ export class MitsuController {
     ${reserve5}   Padding
 
     ------
+    Mitsu-IP: ${multiMitsuDto.ipAddress}
            ${mMsg}
            ${mCodeMsg} `;
 

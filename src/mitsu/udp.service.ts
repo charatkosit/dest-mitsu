@@ -73,26 +73,26 @@ export class UdpService {
    return hexSelectFloor;
   }
 
-  selectFloor2(inputArray: number[]): string {
-    // สร้างบิตสตริงที่มีความยาว 64 บิต
-    let bitString: string = '0'.repeat(64);
+  // selectFloor2(inputArray: number[]): string {
+  //   // สร้างบิตสตริงที่มีความยาว 64 บิต
+  //   let bitString: string = '0'.repeat(64);
 
-    // ตั้งค่าบิตตามตำแหน่งที่ระบุในอาเรย์
-    inputArray.forEach(bitPosition => {
-      const index = 64 - bitPosition;
-      bitString = bitString.substring(0, index) + '1' + bitString.substring(index + 1);
-    });
+  //   // ตั้งค่าบิตตามตำแหน่งที่ระบุในอาเรย์
+  //   inputArray.forEach(bitPosition => {
+  //     const index = 64 - bitPosition;
+  //     bitString = bitString.substring(0, index) + '1' + bitString.substring(index + 1);
+  //   });
 
-    // แปลงบิตสตริงเป็นฐาน 16
-    let hexString = '';
-    for (let i = 0; i < bitString.length; i += 8) {
-      const byte = bitString.substring(i, i + 8);
-      hexString += parseInt(byte, 2).toString(16).padStart(2, '0');
-    }
+  //   // แปลงบิตสตริงเป็นฐาน 16
+  //   let hexString = '';
+  //   for (let i = 0; i < bitString.length; i += 8) {
+  //     const byte = bitString.substring(i, i + 8);
+  //     hexString += parseInt(byte, 2).toString(16).padStart(2, '0');
+  //   }
 
-    // เรียงลำดับใหม่และรวมเป็นสตริงเดียว
-    return hexString.split('').reverse().join('');
-  }
+  //   // เรียงลำดับใหม่และรวมเป็นสตริงเดียว
+  //   return hexString.split('').reverse().join('');
+  // }
 
 
   createHexString(bitsArray) {
@@ -223,6 +223,7 @@ export class UdpService {
       88, 91, 92, 95, 96, 99, 100,
     ];
     
+    //สำหรับ บัตร Single เท่านั้น ถ้าอ่านที่  DeviceNum เหล่านี้  จะ return 'FF'
     const multiBank = [
       3, 4, 5, 6, 7, 8, 9, 10,
       15, 16, 17, 18, 19, 20, 21, 22,

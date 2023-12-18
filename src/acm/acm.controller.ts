@@ -23,6 +23,7 @@ export class AcmController {
     const visitor = await this.acmService.findVisitorByToken(inputAcmDto.token);
     const officer = await this.acmService.findOfficerByToken(inputAcmDto.token);
 
+    //อ่านบัตร Single ที่ DeviceNum เหล่านี้  จะเรียกลิฟท์ให้ลงชั้น 1 เท่านั้น
     const deviceNumOfficeFloor = [37, 38, 49, 50, 57, 58, 61, 62, 65, 66, 69, 70, 73, 74, 77, 78, 81, 82, 85, 86, 89, 90, 93,
       94, 97, 98, 101, 102, 103, 104, 105, 106, 51, 52, 55, 56, 59, 60, 63, 64, 67, 68, 71, 72,
       75, 76, 79, 80, 83, 84, 87, 88, 91, 92, 95, 96, 99, 100]

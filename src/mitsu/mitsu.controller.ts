@@ -123,6 +123,7 @@ export class MitsuController {
        debug: ${debugMsg}
        
        -----
+       Mitsu-IP:    ${singleMitsuDto.ipAddress}
        device-number    hex ${sCodeMsg9}
        bank              hex ${sCodeMsg4}
        boarding-floor   hex ${sCodeMsg14}
@@ -207,6 +208,7 @@ export class MitsuController {
     selectedFloor codde ${hexSelectedFloor}
 
      -----
+    Mitsu-IP: ${multiMitsuDto.ipAddress}
     device-number    hex ${mCodeMsg9}
     bank              hex ${mCodeMsg4}
     boarding-floor   hex ${mCodeMsg14}

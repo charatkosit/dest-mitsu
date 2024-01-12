@@ -55,8 +55,8 @@ export class MitsuController {
   };
 
 
- @Post('single')
-  singleToMitsu(@Body() singleMitsuDto: SingleMitsuDto){
+  @Post('single')
+  singleToMitsu(@Body() singleMitsuDto: SingleMitsuDto) {
     //Destination-Floor
     const hexDestinationFloor = this.udpService.decToHex(+singleMitsuDto.destFloor)
     console.log(`DestFL: ${singleMitsuDto.destFloor}`)
@@ -71,11 +71,27 @@ export class MitsuController {
     //
     const boardingFloorByDeviceNum = this.udpService.deviceNumToHexBoardingFloor(+singleMitsuDto.deviceNum)
     const hexBoardingFloorByDeviceNum = this.lookupTable[boardingFloorByDeviceNum]
-   
+
 
     //Address-Device (Bank01, Bank02, multiBank)
     const hexBankByDeviceNum = this.udpService.checkAddressDevice(+singleMitsuDto.deviceNum)
     console.log(`hexBackByDeviceNum ${hexBankByDeviceNum}`)
+
+    // Elevator's call attribute 00=normal,01=handicapped,02=vip,03=mgnt
+    let callAttribute = '00';
+    if( singleMitsuDto.callAttribute === 'normal'){
+      callAttribute = '00'; 
+    } else if(singleMitsuDto.callAttribute ==='handicapped'){
+      callAttribute = '01'; 
+    } else if(singleMitsuDto.callAttribute === 'vip' ){
+      callAttribute = '02';
+    } else if(singleMitsuDto.callAttribute === 'mgnt'){
+      callAttribute = '03';
+    } else {
+      callAttribute = '00';
+    }
+    const hexCallAttribute = callAttribute;
+    console.log(`hexCallAttribute = ${hexCallAttribute}`)
 
     let Msg: string = '';
     let sCodeMsg1: string = '1730';      // *identifier
@@ -87,20 +103,20 @@ export class MitsuController {
     let reserve1: string = '00000000';   // *reserve
     let sCodeMsg7: string = '01';         // single floor  (Conmmand number)
     let sCodeMsg8: string = '12';         // data length
-    let sCodeMsg9: string = hexDeviceNumber;       // Device number xx xx 
-    let sCodeMsg10: string = '01';                  // Verification type
-    let sCodeMsg11: string = '01';                  // Verification Number
-    let sCodeMsg12: string = '00';                   // Hall call button riser attribute
-    let sCodeMsg13: string = '00';          // Reserve
+    let sCodeMsg9: string = hexDeviceNumber;  // Device number xx xx 
+    let sCodeMsg10: string = '01';        // Verification type
+    let sCodeMsg11: string = '01';        // Verification Number
+    let sCodeMsg12: string = '00';        // Hall call button riser attribute
+    let sCodeMsg13: string = '00';        // Reserve
     let sCodeMsg14: string = hexBoardingFloorByDeviceNum;       // Boarding floor xx xx
     let sCodeMsg15: string = hexDestinationFloor;      // Destination floor       xx xx
     let sCodeMsg16: string = '01';        // Boarding Front/Rear
     let sCodeMsg17: string = '01';        // Destination Front/Rear
-    let sCodeMsg18: string = '00';        // Elevator's call attribute
+    let sCodeMsg18: string = hexCallAttribute; // Elevator's call attribute 00=normal,01=handicapped,02=vip,03=mgnt
     let sCodeMsg19: string = '00';        // Nonstop
     let sCodeMsg20: string = '00';        // Call Registration Mode
     let sCodeMsg21: string = 'FF'         // Sequence Number
-    let reserve2: string = '0000';   // *Reserve
+    let reserve2: string = '0000';        // *Reserve
 
     let sMsg = sCodeMsg1 + sCodeMsg2 + sCodeMsg3 + sCodeMsg4 + sCodeMsg5 + sCodeMsg6 + reserve1 +
       sCodeMsg7 + sCodeMsg8 + sCodeMsg9 + sCodeMsg10 + sCodeMsg11 + sCodeMsg12 +
@@ -109,7 +125,7 @@ export class MitsuController {
       reserve2;
     console.log(`Mitsu-IP:    ${singleMitsuDto.ipAddress}`);
     console.log(`sMsg ${sMsg}`);
-    
+
     const debugMsg = this.udpService.convertStringToHex(sMsg)
     this.udpService.sendMessage(sMsg, 52000, singleMitsuDto.ipAddress);
 
@@ -136,16 +152,16 @@ export class MitsuController {
   }
 
   @Post('multi')
-  multiToMitsu(@Body() multiMitsuDto: MultiMitsuDto){
+  multiToMitsu(@Body() multiMitsuDto: MultiMitsuDto) {
 
     //Device-Number
     const hexDeviceNumber = this.udpService.decToHex(+multiMitsuDto.deviceNum);
 
     //Address-Device (Bank01, Bank02)
     const hexMultiBankByDeviceNum = this.udpService.checkAddressDeviceMulti(+multiMitsuDto.deviceNum)
-     console.log(`hexMultiBankByDeviceNum ${hexMultiBankByDeviceNum}`)
-    
-     //Boarding-Floor  by  Device-number
+    console.log(`hexMultiBankByDeviceNum ${hexMultiBankByDeviceNum}`)
+
+    //Boarding-Floor  by  Device-number
     const boardingFloorByDeviceNum = this.udpService.deviceNumToHexBoardingFloor(+multiMitsuDto.deviceNum)
     console.log(`boardingFloorByDeviceNum ${boardingFloorByDeviceNum}`)
 
@@ -153,12 +169,27 @@ export class MitsuController {
     console.log(`hexBoardingFloorByDeviceNum ${hexBoardingFloorByDeviceNum}`)
 
     //Seleted-Floor
-    const selectedFloor =  JSON.parse(multiMitsuDto.multiSelectFloor).map(Number);
+    const selectedFloor = JSON.parse(multiMitsuDto.multiSelectFloor).map(Number);
     const hexSelectedFloor: any = this.udpService.selectFloor(selectedFloor);
     console.log(`selectFL ${selectedFloor}`)
     console.log(`hexSelectFL ${hexSelectedFloor}`)
 
-    
+    // Elevator's call attribute 00=normal,01=handicapped,02=vip,03=mgnt
+    let callAttribute = '00';
+    if( multiMitsuDto.callAttribute === 'normal'){
+      callAttribute = '00'; 
+    } else if(multiMitsuDto.callAttribute ==='handicapped'){
+      callAttribute = '01'; 
+    } else if(multiMitsuDto.callAttribute === 'vip' ){
+      callAttribute = '02';
+    } else if(multiMitsuDto.callAttribute === 'mgnt'){
+      callAttribute = '03';
+    } else {
+      callAttribute = '00';
+    }
+
+    const hexCallAttribute = callAttribute;
+    console.log(`hexCallAttribute = ${hexCallAttribute}`)
 
     let mCodeMsg1: string = '1730';      // *identify
     let mCodeMsg2: string = '0020';      //  data length
@@ -178,14 +209,14 @@ export class MitsuController {
     let reserve3: string = '0000';      // *reserve xx xx
     let mCodeMsg14: string = '01';       // Front/Rear 01
     let reserve4: string = '00';   // reserve  xx
-    let mCodeMsg15: string = '00';  //Elevator's call attribute
+    let mCodeMsg15: string = hexCallAttribute;   // Elevator's call attribute 00=normal,01=handicapped,02=vip,03=mgnt
     let mCodeMsg16: string = '00';  //Nonstop 00 
     let mCodeMsg17: string = '00'   //Call registration mode  00
-    let mCodeMsg18:string = 'FF';   //Sequence number
+    let mCodeMsg18: string = 'FF';   //Sequence number
     let mCodeMsg19: string = '09';  //Front destination floor data length 09      
     let mCodeMsg20: string = '00';  //Rear destination floor data length  00
-    let mCodeMsg21:string =  hexSelectedFloor; // xx xx xx xx  xx xx xx xx
-    let mCodeMsg22:string = '00';       
+    let mCodeMsg21: string = hexSelectedFloor; // xx xx xx xx  xx xx xx xx
+    let mCodeMsg22: string = '00';
     let reserve5: string = '000000';   // *Padding
 
     let mMsg = mCodeMsg1 + mCodeMsg2 + mCodeMsg3 + mCodeMsg4 + mCodeMsg5 + mCodeMsg6 +
@@ -235,7 +266,7 @@ export class MitsuController {
     ${reserve3}    reserve3 0000
     ${mCodeMsg14}  Boarding Front/Rear 01
     ${reserve4}    reserve4 00
-    ${mCodeMsg15}  Elevator' call attribute 00
+    ${mCodeMsg15}  Elevator' call attribute 00=normal,01=handicapped,02=vip,03=mgnt
     ${mCodeMsg16}  Nonstop 00
     ${mCodeMsg17}  Call registration mode 00
     ${mCodeMsg18}  Sequence number FF 

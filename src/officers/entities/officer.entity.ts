@@ -17,6 +17,9 @@ export class Officer {
   @Column()
   phone: string;
 
+  @Column({ type: 'varchar', default: 'normal' })
+  callAttribute: string;
+
   @Column({nullable:true})
   idOfficer: string;
 

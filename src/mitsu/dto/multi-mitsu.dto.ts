@@ -11,4 +11,7 @@ export class MultiMitsuDto {
     @IsNotEmpty()
      multiSelectFloor: string;
 
+    @IsNotEmpty()
+    callAttribute:string; 
+
 }

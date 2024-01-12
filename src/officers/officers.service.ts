@@ -29,12 +29,21 @@ export class OfficersService {
 
   async findAll() :Promise<Officer[]> {
     return await this.officerRepository.find({
-      select: ['id','firstName', 'lastName', 'phone', 'idOfficer', 'token', 'multiSelectFloor','department']
+      select: ['id','firstName', 'lastName', 'phone', 'idOfficer', 'token', 'multiSelectFloor','callAttribute','department']
     })
   }
 
   findOne(id: number) {
     return `This action returns a #${id} officerxx`;
+  }
+
+  async findByToken(token: string): Promise<any> {
+    const result = await this.officerRepository.find({
+      select: ['id','firstName', 'lastName','address', 'phone', 'idOfficer','department', 'token', 'multiSelectFloor','callAttribute'],
+      where: [{ token: token }]
+    });
+
+    return result;
   }
 
  async update(id: number, updateOfficerDto: UpdateOfficerDto):Promise<UpdateResult> {

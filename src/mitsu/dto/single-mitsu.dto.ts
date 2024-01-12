@@ -11,4 +11,7 @@ export class SingleMitsuDto {
     @IsNotEmpty()
     destFloor: number;
 
+    @IsNotEmpty()
+    callAttribute:string;
+
 }

@@ -14,6 +14,9 @@ export class Visitor {
   @Column()
   phone: string;
 
+  @Column({ type: 'varchar', default: 'normal' })
+  callAttribute: string;
+
   @Column()
   token: string;
 

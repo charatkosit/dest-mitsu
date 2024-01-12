@@ -33,20 +33,20 @@ export class VisitorsService {
 
   async findAll() : Promise<Visitor[]>{
     return await this.visitorRepository.find({
-      select: ['id','firstName', 'lastName', 'phone', 'idCard', 'token', 'destFloor', 'checkIn', 'checkOut']
+      select: ['id','firstName', 'lastName', 'phone', 'idCard', 'token', 'destFloor','callAttribute', 'checkIn', 'checkOut']
     })
   }
 
   async findOne(id: number): Promise<Visitor[]> {
     return await this.visitorRepository.find({
-      select: ['id','firstName', 'lastName', 'phone', 'idCard', 'token', 'destFloor', 'checkIn', 'checkOut'],
+      select: ['id','firstName', 'lastName', 'phone', 'idCard', 'token', 'destFloor','callAttribute', 'checkIn', 'checkOut'],
       where: [{ id: id }]
     })
   }
 
   async findByToken(token: string): Promise<any> {
     const result = await this.visitorRepository.find({
-      select: ['id','firstName', 'lastName', 'phone', 'idCard', 'token', 'destFloor', 'checkIn', 'checkOut'],
+      select: ['id','firstName', 'lastName', 'phone', 'idCard', 'token', 'destFloor','callAttribute', 'checkIn', 'checkOut'],
       where: [{ token: token }]
     });
 

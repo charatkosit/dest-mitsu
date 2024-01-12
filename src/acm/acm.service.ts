@@ -20,7 +20,7 @@ export class AcmService {
 
   async findVisitorByToken(token: string): Promise<any> {
     const result = await this.visitorRepository.find({
-      select: ['firstName', 'lastName', 'phone', 'idCard', 'token', 'destFloor', 'checkIn', 'checkOut'],
+      select: ['firstName', 'lastName', 'phone', 'idCard', 'token', 'destFloor','callAttribute', 'checkIn', 'checkOut'],
       where: [{ token: token }]
     });
 
@@ -29,7 +29,7 @@ export class AcmService {
 
   async findOfficerByToken(token: string): Promise<any> {
     const result = await this.officerRepository.find({
-      select: ['firstName', 'lastName', 'token', 'multiSelectFloor'],
+      select: ['firstName', 'lastName', 'token', 'multiSelectFloor','callAttribute'],
       where: [{ token: token }]
     });
 

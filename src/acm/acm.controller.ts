@@ -12,7 +12,7 @@ export class AcmController {
   @Post('input')
   async inputAcm(@Body() inputAcmDto: InputAcmDto) {
     console.log('input', inputAcmDto)
-    
+
     //This function for re-check DeviceNum  in Debug mode 
     //To check DeviceNum then Line Notifiaction
     const debugData = JSON.stringify(inputAcmDto)
@@ -28,6 +28,10 @@ export class AcmController {
       94, 97, 98, 101, 102, 103, 104, 105, 106, 51, 52, 55, 56, 59, 60, 63, 64, 67, 68, 71, 72,
       75, 76, 79, 80, 83, 84, 87, 88, 91, 92, 95, 96, 99, 100]
 
+  //debug
+  // console.log(`visitor: ${JSON.stringify(visitor)}`);
+  // console.log(`officer: ${JSON.stringify(officer)}`);
+  
 
     if (visitor.length === 1) {
       console.log('route to single')
@@ -45,7 +49,12 @@ export class AcmController {
 
         // const destFloor = visitor[0].destFloor;
         const url = `http://127.0.0.1:3000/api/mitsu/single`;
-        let data: any = { "ipAddress": process.env.IP_MITSU, "deviceNum": inputAcmDto.deviceNum, "destFloor": destFloor }
+        let data: any = {
+          "ipAddress": process.env.IP_MITSU,
+          "deviceNum": inputAcmDto.deviceNum,
+          "destFloor": destFloor,
+          "callAttribute": visitor[0].callAttribute
+        }
         const response = await this.http.post(url, data).toPromise();
         return response.data;
       } catch (error) {
@@ -58,7 +67,12 @@ export class AcmController {
       try {
         // const destFloor = visitor[0].destFloor;
         const url = `http://127.0.0.1:3000/api/mitsu/multi`;
-        let data: any = { "ipAddress": process.env.IP_MITSU, "deviceNum": inputAcmDto.deviceNum, "multiSelectFloor": officer[0].multiSelectFloor }
+        let data: any = {
+          "ipAddress": process.env.IP_MITSU,
+          "deviceNum": inputAcmDto.deviceNum,
+          "multiSelectFloor": officer[0].multiSelectFloor,
+          "callAttribute": officer[0].callAttribute
+        }
         const response = await this.http.post(url, data).toPromise();
         return response.data;
 

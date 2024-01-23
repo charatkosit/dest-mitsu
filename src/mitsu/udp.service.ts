@@ -41,10 +41,9 @@ export class UdpService {
         console.error(err);
         return;
       }
-      // console.log('Hex Message sent', messageBuffer);
-      console.log(`
-               to address: ${address}:${port}
-               Hex Message sent : ${messageBuffer}`)
+      console.log('Hex Message sent', messageBuffer  );
+      console.log(`to address: ${address}:${port}`);
+            
     });
   }
 

@@ -28,7 +28,7 @@ COPY --from=build /usr/src/app/node_modules ./node_modules
 COPY --from=build /usr/src/app/package*.json ./
 
 # Expose the port the app runs on
-EXPOSE 5400
+EXPOSE 3000
 
 # Start the application
 CMD ["npm", "run", "start:prod"]
